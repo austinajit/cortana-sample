@@ -28,14 +28,14 @@
             <ListenFor RequireAppName="BeforeOrAfterPhrase">I want to have prosciutto pizza</ListenFor>
             <ListenFor RequireAppName="BeforeOrAfterPhrase">do you have salami pizza</ListenFor>
             <Feedback>Sure! What type of crust do you prefer?</Feedback>
-            <Navigate Target="MainPage"/>
+            <Navigate/>
         </Command>
         <Command Name="now_delivery_time">
             <Example>now</Example>
             <ListenFor RequireAppName="BeforePhrase">now</ListenFor>
             <ListenFor RequireAppName="BeforeOrAfterPhrase">as soon as possible</ListenFor>
             <Feedback>Thank you for your order! You'll get your pizza in 45 minutes.</Feedback>
-            <VoiceCommandService Target="MyVoiceService"/>
+            <Navigate/>
         </Command>
         <Command Name="size_size">
             <Example>Add example for size - size command</Example>
@@ -66,7 +66,7 @@
             <ListenFor RequireAppName="BeforeOrAfterPhrase">i like {crust} pizza</ListenFor>
             <ListenFor RequireAppName="BeforeOrAfterPhrase">i want {crust} pizza</ListenFor>
             <Feedback> crust it is! What kind of sauce would you like?</Feedback>
-            <Navigate Target="MainPage"/>
+            <Navigate/>
         </Command>
         <Command Name="address_delivery_address">
             <Example>Add example for address - delivery-address command</Example>
@@ -90,7 +90,7 @@
             <ListenFor RequireAppName="BeforeOrAfterPhrase">how are you</ListenFor>
             <ListenFor RequireAppName="BeforeOrAfterPhrase">nice to meet you</ListenFor>
             <Feedback>Hello! What kind of pizza would you like?</Feedback>
-            <Navigate/>
+            <VoiceCommandService Target="ApiAiVoiceCommandService"/>
         </Command>
         <Command Name="type">
             <Example>Add example for type command</Example>
