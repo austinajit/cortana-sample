@@ -79,11 +79,14 @@ namespace ApiAiDemo
             {
                 var storageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///VoiceCommands.xml"));
                 await VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(storageFile);
+
+                resultTextBlock.Text = "Voice commands installed";
                 
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+                resultTextBlock.Text = ex.ToString();
             }
         }
     }

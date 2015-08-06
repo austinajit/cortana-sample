@@ -10,7 +10,7 @@ using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.VoiceCommands;
 using ApiAiSDK;
 
-namespace ApiAiDemo
+namespace ApiAiDemo.VoiceCommands
 {
     public sealed class ApiAiVoiceCommandService : IBackgroundTask
     {
@@ -26,14 +26,14 @@ namespace ApiAiDemo
 
             var triggerDetails = taskInstance.TriggerDetails as AppServiceTriggerDetails;
 
-            if (triggerDetails != null && (triggerDetails.Name?.Contains("ApiAiVoice") ?? false))
+            if (triggerDetails != null/* && (triggerDetails.Name?.Contains("ApiAiVoice") ?? false)*/)
             {
 
-                var config = new AIConfiguration("cb9693af-85ce-4fbf-844a-5563722fc27f",
-                                "fa16c9b66e5d4823bbf47640619ad86c",
-                                SupportedLanguage.English);
+                //var config = new AIConfiguration("cb9693af-85ce-4fbf-844a-5563722fc27f",
+                //                "fa16c9b66e5d4823bbf47640619ad86c",
+                //                SupportedLanguage.English);
 
-                apiAi = new ApiAi(config);
+                //apiAi = new ApiAi(config);
 
                 try
                 {
@@ -47,13 +47,13 @@ namespace ApiAiDemo
                             {
                                 //var destination =
                                 //  voiceCommand.Properties["destination"][0];
-                                SendCompletionMessageForDestination("greet");
+                                SendResponse("greet");
                                 break;
                             }
 
                         // As a last resort launch the app in the foreground
                         default:
-                            
+                            SendResponse("unknown command");
                             break;
                     }
                 }
@@ -62,7 +62,7 @@ namespace ApiAiDemo
                     if (this.serviceDeferral != null)
                     {
                         //Complete the service deferral
-                      //  this.serviceDeferral.Complete();
+                        serviceDeferral.Complete();
                     }
                 }
             }
@@ -83,11 +83,11 @@ namespace ApiAiDemo
             {
                 // Insert your code here
                 //Complete the service deferral
-               // serviceDeferral.Complete();
+                serviceDeferral.Complete();
             }
         }
 
-        private async void SendCompletionMessageForDestination(string destination)
+        private async void SendResponse(string textResponse)
         {
             // Take action and determine when the next trip to destination
             // Inset code here

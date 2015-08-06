@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="c5e86a4a-ef96-4828-a5bf-9e7c9347bb1f" Publisher="CN=xvir" Version="1.0.0.0" />
+  <Identity Name="ApiAiDemo" Publisher="CN=xvir" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="c5e86a4a-ef96-4828-a5bf-9e7c9347bb1f" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>ApiAiDemo</DisplayName>
@@ -20,15 +20,11 @@
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
-
       <Extensions>
-        <uap:Extension Category="windows.appService"
-          EntryPoint=
-            "ApiAiDemo.ApiAiVoiceCommandService">
-          <uap:AppService Name="ApiAiVoiceCommandService"/>
+        <uap:Extension Category="windows.appService" EntryPoint="ApiAiDemo.VoiceCommands.ApiAiVoiceCommandService">
+          <uap:AppService Name="ApiAiVoiceCommandService" />
         </uap:Extension>
       </Extensions>
-      
     </Application>
   </Applications>
   <Capabilities>

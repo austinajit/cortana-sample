@@ -3,4 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <UseSimulator>false</UseSimulator>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugService|x64'">
+    <DoNotLaunchApp>true</DoNotLaunchApp>
+  </PropertyGroup>
 </Project>
