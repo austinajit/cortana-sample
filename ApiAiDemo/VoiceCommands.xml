@@ -4,10 +4,10 @@
         <AppName>pizza</AppName>
         <Example>I can deliver Pizza!!!</Example>
         <Command Name="unknown">
-            <Example>Add example for unknown command</Example>
+            <Example>Some another command</Example>
             <ListenFor RequireAppName="BeforePhrase">{*}</ListenFor>
-            <Feedback>Can you rephrase it please?</Feedback>
-            <Navigate/>
+            <Feedback>processing</Feedback>
+            <VoiceCommandService Target="ApiAiVoiceCommandService"/>
         </Command>
         <Command Name="time_delivery_time">
             <Example>Add example for time - delivery-time command</Example>
@@ -89,7 +89,7 @@
             <ListenFor RequireAppName="BeforePhrase">hello</ListenFor>
             <ListenFor RequireAppName="BeforeOrAfterPhrase">how are you</ListenFor>
             <ListenFor RequireAppName="BeforeOrAfterPhrase">nice to meet you</ListenFor>
-            <Feedback>processing</Feedback>
+            <Feedback>Hello, what kind of pizza do you want?</Feedback>
             <VoiceCommandService Target="ApiAiVoiceCommandService"/>
         </Command>
         <Command Name="type">

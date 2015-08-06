@@ -48,41 +48,47 @@ namespace ApiAiDemo.VoiceCommands
                     voiceServiceConnection = VoiceCommandServiceConnection.FromAppServiceTriggerDetails(triggerDetails);
                     voiceServiceConnection.VoiceCommandCompleted += VoiceCommandCompleted;
                     var voiceCommand = await voiceServiceConnection.GetVoiceCommandAsync();
-
                     var recognizedText = voiceCommand.SpeechRecognitionResult?.Text;
-                    if(!string.IsNullOrEmpty(recognizedText))
-                    {
-                        var aiResponse = await apiAi.TextRequestAsync(recognizedText);
 
-                        if(aiResponse != null)
-                        {
-                            await SendResponse(aiResponse.Result.Fulfillment?.Speech);
-                        }
-                        else
-                        {
-                            switch (voiceCommand.CommandName)
+                    switch (voiceCommand.CommandName)
+                    {
+                        case "greetings":
                             {
-                                case "greetings":
-                                    {
-                                        //var destination =
-                                        //  voiceCommand.Properties["destination"][0];
-                                        await SendResponse("greet");
-                                        break;
-                                    }
+                                var aiResponse = await apiAi.TextRequestAsync(recognizedText);
+                                
+                                var repeatMessage = new VoiceCommandUserMessage
+                                {
+                                    DisplayMessage = "Repeat please",
+                                    SpokenMessage = "Repeate please"
+                                };
 
-                                // As a last resort launch the app in the foreground
-                                default:
-                                    await SendResponse("unknown command");
-                                    break;
+                                var processingMessage = new VoiceCommandUserMessage
+                                {
+                                    DisplayMessage = aiResponse?.Result?.Fulfillment?.Speech,
+                                    SpokenMessage = ""
+                                };
+
+                                var resp = VoiceCommandResponse.CreateResponseForPrompt(processingMessage, repeatMessage);
+                                await voiceServiceConnection.ReportSuccessAsync(resp);
+                                break;
                             }
-                        }
-                        
-                    }
-                    else
-                    {
-                        await SendResponse("unknown command");
-                    }
 
+                        case "unknown":
+                            {
+                                if (!string.IsNullOrEmpty(recognizedText))
+                                {
+                                    var aiResponse = await apiAi.TextRequestAsync(recognizedText);
+                                    if(aiResponse != null)
+                                    {
+                                        await SendResponse(aiResponse.Result.Fulfillment?.Speech);
+                                    }   
+                                }
+                            }
+                            break;
+                        default:
+                            await SendResponse("unknown command");
+                            break;
+                    }
                     
                 }
                 catch(Exception e)
