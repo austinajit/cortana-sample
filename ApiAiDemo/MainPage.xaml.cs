@@ -89,5 +89,22 @@ namespace ApiAiDemo
                 resultTextBlock.Text = ex.ToString();
             }
         }
+
+        private async void UninstallCommands_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var storageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///UninstallCommands.xml"));
+                await VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(storageFile);
+
+                resultTextBlock.Text = "Voice commands uninstalled";
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                resultTextBlock.Text = ex.ToString();
+            }
+        }
     }
 }

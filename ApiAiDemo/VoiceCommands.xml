@@ -89,7 +89,7 @@
             <ListenFor RequireAppName="BeforePhrase">hello</ListenFor>
             <ListenFor RequireAppName="BeforeOrAfterPhrase">how are you</ListenFor>
             <ListenFor RequireAppName="BeforeOrAfterPhrase">nice to meet you</ListenFor>
-            <Feedback>Hello! What kind of pizza would you like?</Feedback>
+            <Feedback>processing</Feedback>
             <VoiceCommandService Target="ApiAiVoiceCommandService"/>
         </Command>
         <Command Name="type">

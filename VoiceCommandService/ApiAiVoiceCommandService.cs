@@ -9,6 +9,8 @@ using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.VoiceCommands;
 using ApiAiSDK;
+using System.Diagnostics;
+using Windows.Storage;
 
 namespace ApiAiDemo.VoiceCommands
 {
@@ -23,71 +25,89 @@ namespace ApiAiDemo.VoiceCommands
             serviceDeferral = taskInstance.GetDeferral();
      
             taskInstance.Canceled += OnTaskCanceled;
-
+            
             var triggerDetails = taskInstance.TriggerDetails as AppServiceTriggerDetails;
 
-            if (triggerDetails != null/* && (triggerDetails.Name?.Contains("ApiAiVoice") ?? false)*/)
+            var sessionId = RestoreSessionId();
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                PersistSessionId("my_session_id");
+            }
+
+            if (triggerDetails != null)
             {
 
-                //var config = new AIConfiguration("cb9693af-85ce-4fbf-844a-5563722fc27f",
-                //                "fa16c9b66e5d4823bbf47640619ad86c",
-                //                SupportedLanguage.English);
+                var config = new AIConfiguration("cb9693af-85ce-4fbf-844a-5563722fc27f",
+                           "fa16c9b66e5d4823bbf47640619ad86c",
+                           SupportedLanguage.English);
 
-                //apiAi = new ApiAi(config);
-
+                apiAi = new ApiAi(config);
+                
                 try
                 {
                     voiceServiceConnection = VoiceCommandServiceConnection.FromAppServiceTriggerDetails(triggerDetails);
                     voiceServiceConnection.VoiceCommandCompleted += VoiceCommandCompleted;
                     var voiceCommand = await voiceServiceConnection.GetVoiceCommandAsync();
 
-                    switch (voiceCommand.CommandName)
+                    var recognizedText = voiceCommand.SpeechRecognitionResult?.Text;
+                    if(!string.IsNullOrEmpty(recognizedText))
                     {
-                        case "greetings":
-                            {
-                                //var destination =
-                                //  voiceCommand.Properties["destination"][0];
-                                SendResponse("greet");
-                                break;
-                            }
+                        var aiResponse = await apiAi.TextRequestAsync(recognizedText);
 
-                        // As a last resort launch the app in the foreground
-                        default:
-                            SendResponse("unknown command");
-                            break;
+                        if(aiResponse != null)
+                        {
+                            await SendResponse(aiResponse.Result.Fulfillment?.Speech);
+                        }
+                        else
+                        {
+                            switch (voiceCommand.CommandName)
+                            {
+                                case "greetings":
+                                    {
+                                        //var destination =
+                                        //  voiceCommand.Properties["destination"][0];
+                                        await SendResponse("greet");
+                                        break;
+                                    }
+
+                                // As a last resort launch the app in the foreground
+                                default:
+                                    await SendResponse("unknown command");
+                                    break;
+                            }
+                        }
+                        
                     }
+                    else
+                    {
+                        await SendResponse("unknown command");
+                    }
+
+                    
+                }
+                catch(Exception e)
+                {
+                    var message = e.ToString();
+                    Debug.WriteLine(message);
                 }
                 finally
                 {
-                    if (this.serviceDeferral != null)
-                    {
-                        //Complete the service deferral
-                        serviceDeferral.Complete();
-                    }
+                    serviceDeferral?.Complete();
                 }
             }
         }
 
         private void OnTaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
         {
-            if (serviceDeferral != null)
-            {
-                serviceDeferral.Complete();
-            }
-            
+            serviceDeferral?.Complete();            
         }
 
         private void VoiceCommandCompleted(VoiceCommandServiceConnection sender, VoiceCommandCompletedEventArgs args)
         {
-            if (serviceDeferral != null)
-            {
-                // Insert your code here
-                //Complete the service deferral
-                serviceDeferral.Complete();
-            }
+            serviceDeferral?.Complete();
         }
 
-        private async void SendResponse(string textResponse)
+        private async Task SendResponse(string textResponse)
         {
             // Take action and determine when the next trip to destination
             // Inset code here
@@ -98,8 +118,8 @@ namespace ApiAiDemo.VoiceCommands
             // First, create the VoiceCommandUserMessage with the strings 
             // that Cortana will show and speak.
             var userMessage = new VoiceCommandUserMessage();
-            userMessage.DisplayMessage = "Hello! What kind of pizza would you like?";
-            userMessage.SpokenMessage = "Hello! What kind of pizza would you like?";
+            userMessage.DisplayMessage = textResponse;
+            userMessage.SpokenMessage = textResponse;
 
             // Optionally, present visual information about the answer.
             // For this example, create a VoiceCommandContentTile with an 
@@ -132,6 +152,19 @@ namespace ApiAiDemo.VoiceCommands
             // Ask Cortana to display the user message and content tile and 
             // also speak the user message.
             await voiceServiceConnection.ReportSuccessAsync(response);
+        }
+
+        private void PersistSessionId(string sessionId)
+        {
+            var roamingSettings = ApplicationData.Current.LocalSettings;
+            roamingSettings.Values["SessionId"] = sessionId;
+        }
+
+        private string RestoreSessionId()
+        {
+            var roamingSettings = ApplicationData.Current.LocalSettings;
+            var sessionId = Convert.ToString(roamingSettings.Values["SessionId"]);
+            return sessionId;
         }
     }
 }
