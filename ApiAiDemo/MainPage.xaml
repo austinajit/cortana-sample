@@ -45,6 +45,8 @@
                        TextWrapping="WrapWholeWords"
                        />
             
+            <MediaElement Name="mediaElement" />
+            
         </Grid>
     </Grid>
 </Page>

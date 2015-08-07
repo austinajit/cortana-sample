@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Newtonsoft.Json;
 using Windows.ApplicationModel.VoiceCommands;
+using Windows.Media.SpeechSynthesis;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -20,13 +21,16 @@ namespace ApiAiDemo
     public sealed partial class MainPage : Page
     {
         private SpeechRecognizer speechRecognizer;
+        private SpeechSynthesizer speechSynthesizer;
         private ApiAi apiAi;
+
 
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             speechRecognizer = new SpeechRecognizer(new Language("en-US"));
-
+            speechSynthesizer = new SpeechSynthesizer();
+        
             var config = new AIConfiguration("cb9693af-85ce-4fbf-844a-5563722fc27f",
                                  "fa16c9b66e5d4823bbf47640619ad86c",
                                  SupportedLanguage.English);
@@ -49,22 +53,47 @@ namespace ApiAiDemo
 
         private async void Listen_Click(object sender, RoutedEventArgs e)
         {
+            if(mediaElement.CurrentState == Windows.UI.Xaml.Media.MediaElementState.Playing)
+            {
+                mediaElement.Stop();
+            }
+            
             await speechRecognizer.CompileConstraintsAsync();
             var recognitionResults = await speechRecognizer.RecognizeWithUIAsync();
 
-            if (recognitionResults !=  null)
+            if (recognitionResults != null)
             {
                 var requestText = recognitionResults.Text;
 
-                try
+                if (!string.IsNullOrEmpty(requestText))
                 {
-                    var aiResponse = await apiAi.TextRequestAsync(requestText);
-                    resultTextBlock.Text = JsonConvert.SerializeObject(aiResponse, Formatting.Indented);
+                    try
+                    {
+                        var aiResponse = await apiAi.TextRequestAsync(requestText);
+
+                        if (aiResponse != null)
+                        {
+                            resultTextBlock.Text = JsonConvert.SerializeObject(aiResponse, Formatting.Indented);
+                            var speechText = aiResponse.Result?.Fulfillment?.Speech;
+                            if (!string.IsNullOrEmpty(speechText))
+                            {
+                                var speechStream = await speechSynthesizer.SynthesizeTextToStreamAsync(speechText);
+                                mediaElement.SetSource(speechStream, speechStream.ContentType);
+                                mediaElement.Play();
+                            }
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        resultTextBlock.Text = ex.ToString();
+                    }
                 }
-                catch(Exception ex)
+                else
                 {
-                    resultTextBlock.Text = ex.ToString();
+                    resultTextBlock.Text = "Empty recognition result";
                 }
+                
                 
             }
             else
