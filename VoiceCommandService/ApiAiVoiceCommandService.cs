@@ -28,12 +28,6 @@ namespace ApiAiDemo.VoiceCommands
             
             var triggerDetails = taskInstance.TriggerDetails as AppServiceTriggerDetails;
 
-            var sessionId = RestoreSessionId();
-            if (string.IsNullOrEmpty(sessionId))
-            {
-                PersistSessionId("my_session_id");
-            }
-
             if (triggerDetails != null)
             {
 
@@ -42,6 +36,7 @@ namespace ApiAiDemo.VoiceCommands
                            SupportedLanguage.English);
 
                 apiAi = new ApiAi(config);
+                PersistSessionId(apiAi.SessionId);
                 
                 try
                 {
@@ -73,6 +68,14 @@ namespace ApiAiDemo.VoiceCommands
                                 break;
                             }
 
+                        case "type":
+                            {
+                                var aiResponse = await apiAi.TextRequestAsync(recognizedText);
+
+                                //launch app
+                                await LaunchAppInForeground(aiResponse?.Result?.Fulfillment?.Speech ?? string.Empty);
+                            }
+                            break;
                         case "unknown":
                             {
                                 if (!string.IsNullOrEmpty(recognizedText))
@@ -95,6 +98,7 @@ namespace ApiAiDemo.VoiceCommands
                 {
                     var message = e.ToString();
                     Debug.WriteLine(message);
+                    
                 }
                 finally
                 {
@@ -159,6 +163,19 @@ namespace ApiAiDemo.VoiceCommands
             // also speak the user message.
             await voiceServiceConnection.ReportSuccessAsync(response);
         }
+
+        private async Task LaunchAppInForeground(string textMessage)
+        {
+            var userMessage = new VoiceCommandUserMessage();
+            userMessage.SpokenMessage = textMessage;
+            userMessage.DisplayMessage = textMessage;
+
+            var response = VoiceCommandResponse.CreateResponse(userMessage);
+            response.AppLaunchArgument = "";
+
+            await voiceServiceConnection.RequestAppLaunchAsync(response);
+        }
+
 
         private void PersistSessionId(string sessionId)
         {

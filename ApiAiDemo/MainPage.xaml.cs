@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Navigation;
 using Newtonsoft.Json;
 using Windows.ApplicationModel.VoiceCommands;
 using Windows.Media.SpeechSynthesis;
+using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -36,13 +37,14 @@ namespace ApiAiDemo
                                  SupportedLanguage.English);
 
             apiAi = new ApiAi(config);
+            
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            resultTextBlock.Text = "OnNavigatedTo";
+            //resultTextBlock.Text = "OnNavigatedTo";
 
             if (e.Parameter != null)
             {
@@ -53,7 +55,14 @@ namespace ApiAiDemo
 
         private async void Listen_Click(object sender, RoutedEventArgs e)
         {
-            if(mediaElement.CurrentState == Windows.UI.Xaml.Media.MediaElementState.Playing)
+
+            var sessionId = RestoreSessionId();
+            if (!string.IsNullOrEmpty(sessionId))
+            {
+                apiAi.SessionId = sessionId;
+            }
+
+            if(mediaElement.CurrentState == MediaElementState.Playing)
             {
                 mediaElement.Stop();
             }
@@ -134,6 +143,17 @@ namespace ApiAiDemo
                 Debug.WriteLine(ex);
                 resultTextBlock.Text = ex.ToString();
             }
+        }
+
+        private string RestoreSessionId()
+        {
+            var roamingSettings = ApplicationData.Current.LocalSettings;
+            if (roamingSettings.Values.ContainsKey("SessionId"))
+            {
+                var sessionId = Convert.ToString(roamingSettings.Values["SessionId"]);
+                return sessionId;
+            }
+            return string.Empty;
         }
     }
 }

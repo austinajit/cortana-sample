@@ -108,21 +108,22 @@ namespace ApiAiDemo
         protected override void OnActivated(IActivatedEventArgs e)
         {
             // Was the app activated by a voice command?
-            if (e.Kind != ActivationKind.VoiceCommand)
-            {
-                return;
-            }
+            //if (e.Kind != ActivationKind.VoiceCommand)
+            //{
+            //    base.OnActivated(e);
+            //    return;
+            //}
 
-            var commandArgs = e as VoiceCommandActivatedEventArgs;
+            //var commandArgs = e as VoiceCommandActivatedEventArgs;
 
-            var speechRecognitionResult = commandArgs.Result;
+            //var speechRecognitionResult = commandArgs.Result;
 
-            // Get the name of the voice command and the text spoken
-            var voiceCommandName = speechRecognitionResult.RulePath[0];
-            var textSpoken = speechRecognitionResult.Text;
-            // The commandMode is either "voice" or "text", and it indicates how the voice command was entered by the user.
-            // Apps should respect "text" mode by providing feedback in a silent form.
-            var commandMode = speechRecognitionResult.SemanticInterpretation;
+            //// Get the name of the voice command and the text spoken
+            //var voiceCommandName = speechRecognitionResult.RulePath[0];
+            //var textSpoken = speechRecognitionResult.Text;
+            //// The commandMode is either "voice" or "text", and it indicates how the voice command was entered by the user.
+            //// Apps should respect "text" mode by providing feedback in a silent form.
+            //var commandMode = speechRecognitionResult.SemanticInterpretation;
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -140,13 +141,14 @@ namespace ApiAiDemo
             }
 
 
-            rootFrame.Navigate(typeof(MainPage),
-                new
-                {
-                    VoiceCommandName = voiceCommandName,
-                    TextSpoken = textSpoken,
-                    CommandMode = commandMode
-                });
+            //var parameter = new
+            //{
+            //    VoiceCommandName = voiceCommandName,
+            //    TextSpoken = textSpoken,
+            //    CommandMode = commandMode
+            //};
+
+            rootFrame.Navigate(typeof(MainPage), null);
 
             // Ensure the current window is active
             Window.Current.Activate();

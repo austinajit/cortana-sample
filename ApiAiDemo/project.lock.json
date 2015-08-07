@@ -3,17 +3,6 @@
   "version": 1,
   "targets": {
     "UAP,Version=v10.0": {
-      "ApiAiSDK/1.3.2": {
-        "dependencies": {
-          "Newtonsoft.Json": "[6.0.8, )"
-        },
-        "compile": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        },
-        "runtime": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        }
-      },
       "Microsoft.ApplicationInsights/1.1.0": {
         "compile": {
           "lib/portable-win81+wpa81/Microsoft.ApplicationInsights.dll": {}
@@ -243,12 +232,12 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Newtonsoft.Json/6.0.8": {
+      "Newtonsoft.Json/7.0.1": {
         "compile": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -1588,17 +1577,6 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
-      "ApiAiSDK/1.3.2": {
-        "dependencies": {
-          "Newtonsoft.Json": "[6.0.8, )"
-        },
-        "compile": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        },
-        "runtime": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        }
-      },
       "Microsoft.ApplicationInsights/1.1.0": {
         "compile": {
           "lib/portable-win81+wpa81/Microsoft.ApplicationInsights.dll": {}
@@ -1871,12 +1849,12 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Newtonsoft.Json/6.0.8": {
+      "Newtonsoft.Json/7.0.1": {
         "compile": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -3263,17 +3241,6 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
-      "ApiAiSDK/1.3.2": {
-        "dependencies": {
-          "Newtonsoft.Json": "[6.0.8, )"
-        },
-        "compile": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        },
-        "runtime": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        }
-      },
       "Microsoft.ApplicationInsights/1.1.0": {
         "compile": {
           "lib/portable-win81+wpa81/Microsoft.ApplicationInsights.dll": {}
@@ -3532,12 +3499,12 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Newtonsoft.Json/6.0.8": {
+      "Newtonsoft.Json/7.0.1": {
         "compile": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -4910,17 +4877,6 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
-      "ApiAiSDK/1.3.2": {
-        "dependencies": {
-          "Newtonsoft.Json": "[6.0.8, )"
-        },
-        "compile": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        },
-        "runtime": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        }
-      },
       "Microsoft.ApplicationInsights/1.1.0": {
         "compile": {
           "lib/portable-win81+wpa81/Microsoft.ApplicationInsights.dll": {}
@@ -5198,12 +5154,12 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Newtonsoft.Json/6.0.8": {
+      "Newtonsoft.Json/7.0.1": {
         "compile": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -6590,17 +6546,6 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
-      "ApiAiSDK/1.3.2": {
-        "dependencies": {
-          "Newtonsoft.Json": "[6.0.8, )"
-        },
-        "compile": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        },
-        "runtime": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        }
-      },
       "Microsoft.ApplicationInsights/1.1.0": {
         "compile": {
           "lib/portable-win81+wpa81/Microsoft.ApplicationInsights.dll": {}
@@ -6859,12 +6804,12 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Newtonsoft.Json/6.0.8": {
+      "Newtonsoft.Json/7.0.1": {
         "compile": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -8237,17 +8182,6 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
-      "ApiAiSDK/1.3.2": {
-        "dependencies": {
-          "Newtonsoft.Json": "[6.0.8, )"
-        },
-        "compile": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        },
-        "runtime": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        }
-      },
       "Microsoft.ApplicationInsights/1.1.0": {
         "compile": {
           "lib/portable-win81+wpa81/Microsoft.ApplicationInsights.dll": {}
@@ -8525,12 +8459,12 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Newtonsoft.Json/6.0.8": {
+      "Newtonsoft.Json/7.0.1": {
         "compile": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -9917,17 +9851,6 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
-      "ApiAiSDK/1.3.2": {
-        "dependencies": {
-          "Newtonsoft.Json": "[6.0.8, )"
-        },
-        "compile": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        },
-        "runtime": {
-          "lib/wpa/ApiAiSDK.dll": {}
-        }
-      },
       "Microsoft.ApplicationInsights/1.1.0": {
         "compile": {
           "lib/portable-win81+wpa81/Microsoft.ApplicationInsights.dll": {}
@@ -10186,12 +10109,12 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
-      "Newtonsoft.Json/6.0.8": {
+      "Newtonsoft.Json/7.0.1": {
         "compile": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/netcore45/Newtonsoft.Json.dll": {}
+          "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -11565,18 +11488,6 @@
     }
   },
   "libraries": {
-    "ApiAiSDK/1.3.2": {
-      "sha512": "yDXdXp/XjdoT8jKgEHS2S7vvUvpf+ej/cUvH2bAw8K5amoUvZXu4PobaNPsNLWZy7LLnR5YhYzW0qBHwUHbwTw==",
-      "type": "Package",
-      "files": [
-        "_rels/.rels",
-        "ApiAiSDK.nuspec",
-        "lib/net35/ApiAiSDK.dll",
-        "lib/wpa/ApiAiSDK.dll",
-        "package/services/metadata/core-properties/1.psmdcp",
-        "[Content_Types].xml"
-      ]
-    },
     "Microsoft.ApplicationInsights/1.1.0": {
       "sha512": "X4QBy+VEF+J+H+Cuo1jjo+uUjU5d/ipEVgo4MPddo6sVU899kh6TEhPXri4PiZPsZi9nRn5QSjBJOcsnQsrF5w==",
       "type": "Package",
@@ -12280,8 +12191,8 @@
         "[Content_Types].xml"
       ]
     },
-    "Newtonsoft.Json/6.0.8": {
-      "sha512": "7ut47NDedTW19EbL0JpFDYUP62fcuz27hJrehCDNajdCS5NtqL+E39+7Um3OkNc2wl2ym7K8Ln5eNuLus6mVGQ==",
+    "Newtonsoft.Json/7.0.1": {
+      "sha512": "q3V4KLetMLnt1gpAVWgtXnHjKs0UG/RalBc29u2ZKxd5t5Ze4JBL5WiiYIklJyK/5CRiIiNwigVQUo0FgbsuWA==",
       "type": "Package",
       "files": [
         "_rels/.rels",
@@ -12294,14 +12205,12 @@
         "lib/net40/Newtonsoft.Json.xml",
         "lib/net45/Newtonsoft.Json.dll",
         "lib/net45/Newtonsoft.Json.xml",
-        "lib/netcore45/Newtonsoft.Json.dll",
-        "lib/netcore45/Newtonsoft.Json.xml",
         "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.dll",
         "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.xml",
-        "lib/portable-net45+wp80+win8+wpa81+aspnetcore50/Newtonsoft.Json.dll",
-        "lib/portable-net45+wp80+win8+wpa81+aspnetcore50/Newtonsoft.Json.xml",
+        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll",
+        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.xml",
         "tools/install.ps1",
-        "package/services/metadata/core-properties/d6cceb7474b245aab29598e10c6e65d6.psmdcp",
+        "package/services/metadata/core-properties/49e907fc018c4c7ab632e6d4ad4766f8.psmdcp",
         "[Content_Types].xml"
       ]
     },
@@ -15003,11 +14912,11 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "ApiAiSDK >= 1.3.2",
       "Microsoft.ApplicationInsights >= 1.1.0",
       "Microsoft.ApplicationInsights.PersistenceChannel >= 1.1.0",
       "Microsoft.ApplicationInsights.WindowsApps >= 1.1.0",
-      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0"
+      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.0.0",
+      "Newtonsoft.Json >= 7.0.1"
     ],
     "UAP,Version=v10.0": []
   }
