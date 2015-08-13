@@ -1,6 +1,9 @@
 ﻿using ApiAiSDK;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
+using System.Threading.Tasks;
 using Windows.Globalization;
 using Windows.Media.SpeechRecognition;
 using Windows.Storage;
@@ -10,7 +13,10 @@ using Windows.UI.Xaml.Navigation;
 using Newtonsoft.Json;
 using Windows.ApplicationModel.VoiceCommands;
 using Windows.Media.SpeechSynthesis;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Media;
+using ApiAiSDK.Model;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -29,28 +35,84 @@ namespace ApiAiDemo
         public MainPage()
         {
             InitializeComponent();
-            speechRecognizer = new SpeechRecognizer(new Language("en-US"));
+            
             speechSynthesizer = new SpeechSynthesizer();
         
             var config = new AIConfiguration("cb9693af-85ce-4fbf-844a-5563722fc27f",
-                                 "fa16c9b66e5d4823bbf47640619ad86c",
+                                 "40048a5740a1455c9737342154e86946",
                                  SupportedLanguage.English);
 
             apiAi = new ApiAi(config);
+
+            mediaElement.MediaEnded += MediaElement_MediaEnded;
             
+        }
+
+        private void MediaElement_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("MediaElement_MediaEnded");
+            Listen_Click(listenButton, null);
+        }
+
+        private void SpeechRecognizer_StateChanged(SpeechRecognizer sender, SpeechRecognizerStateChangedEventArgs args)
+        {
+            Debug.WriteLine("SpeechRecognizer_StateChanged " + args.State);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            //resultTextBlock.Text = "OnNavigatedTo";
+            var appView = ApplicationView.GetForCurrentView();
+            var titleBar = appView.TitleBar;
+            titleBar.BackgroundColor = Color.FromArgb(255, 43, 48, 62);
+            titleBar.InactiveBackgroundColor = Color.FromArgb(255, 43, 48, 62);
+            titleBar.ButtonBackgroundColor = Color.FromArgb(255, 43, 48, 62);
+            titleBar.ButtonInactiveBackgroundColor = Color.FromArgb(255, 43, 48, 62);
+            titleBar.ForegroundColor = Color.FromArgb(255, 247, 255, 255);
+            
 
             if (e.Parameter != null)
             {
-                object param = e.Parameter;
+                var param = e.Parameter;
                 resultTextBlock.Text = param.ToString();
             }
+
+            InitializeRecognizer();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            if (speechRecognizer != null)
+            {
+                if (speechRecognizer.State != SpeechRecognizerState.Idle)
+                {
+                    
+                }
+
+                speechRecognizer.StateChanged -= SpeechRecognizer_StateChanged;
+
+                speechRecognizer.Dispose();
+                speechRecognizer = null;
+            }
+        }
+
+        private async Task InitializeRecognizer()
+        {
+            if (speechRecognizer != null)
+            {
+                // cleanup prior to re-initializing this scenario.
+                speechRecognizer.StateChanged -= SpeechRecognizer_StateChanged;
+
+                speechRecognizer.Dispose();
+                speechRecognizer = null;
+            }
+
+            speechRecognizer = new SpeechRecognizer(new Language("en-US"));
+            speechRecognizer.StateChanged += SpeechRecognizer_StateChanged;
+            await speechRecognizer.CompileConstraintsAsync();
+            listenButton.IsEnabled = true;
         }
 
         private async void Listen_Click(object sender, RoutedEventArgs e)
@@ -66,48 +128,138 @@ namespace ApiAiDemo
             {
                 mediaElement.Stop();
             }
-            
-            await speechRecognizer.CompileConstraintsAsync();
-            var recognitionResults = await speechRecognizer.RecognizeWithUIAsync();
 
-            if (recognitionResults != null)
+
+            try
             {
-                var requestText = recognitionResults.Text;
-
-                if (!string.IsNullOrEmpty(requestText))
+                var recognitionResults = await speechRecognizer.RecognizeWithUIAsync();
+                
+                if (recognitionResults != null && recognitionResults.Status == SpeechRecognitionResultStatus.Success)
                 {
-                    try
+                    var requestText = recognitionResults.Text;
+                    
+                    if (!string.IsNullOrEmpty(requestText))
                     {
-                        var aiResponse = await apiAi.TextRequestAsync(requestText);
+                        var aiRequest = CreateAiRequest(requestText, recognitionResults);
 
-                        if (aiResponse != null)
+                        try
                         {
-                            resultTextBlock.Text = JsonConvert.SerializeObject(aiResponse, Formatting.Indented);
-                            var speechText = aiResponse.Result?.Fulfillment?.Speech;
-                            if (!string.IsNullOrEmpty(speechText))
-                            {
-                                var speechStream = await speechSynthesizer.SynthesizeTextToStreamAsync(speechText);
-                                mediaElement.SetSource(speechStream, speechStream.ContentType);
-                                mediaElement.Play();
-                            }
-                        }
+                            var aiResponse = await apiAi.TextRequestAsync(aiRequest);
 
+                            if (aiResponse != null)
+                            {
+                                OutputJson(aiResponse);
+                                OutputParams(aiResponse);
+                                
+                                var speechText = aiResponse.Result?.Fulfillment?.Speech;
+                                if (!string.IsNullOrEmpty(speechText))
+                                {
+                                    var speechStream = await speechSynthesizer.SynthesizeTextToStreamAsync(speechText);
+                                    mediaElement.SetSource(speechStream, speechStream.ContentType);
+                                    mediaElement.Play();
+                                }
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            resultTextBlock.Text = ex.ToString();
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        resultTextBlock.Text = ex.ToString();
+                        resultTextBlock.Text = "Empty recognition result";
                     }
                 }
                 else
                 {
-                    resultTextBlock.Text = "Empty recognition result";
+                    resultTextBlock.Text = "Empty or error result";
                 }
-                
-                
             }
-            else
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex.ToString());
                 resultTextBlock.Text = "Empty or error result";
+            }
+            
+        }
+
+        private void OutputParams(AIResponse aiResponse)
+        {
+            var contextsParams = new Dictionary<string,string>();
+
+            if (aiResponse.Result?.Contexts != null)
+            {
+                foreach (var context in aiResponse.Result?.Contexts)
+                {
+                    if (context.Parameters != null)
+                    {
+                        foreach (var parameter in context.Parameters)
+                        {
+                            if (!contextsParams.ContainsKey(parameter.Key))
+                            {
+                                contextsParams.Add(parameter.Key, parameter.Value);
+                            }
+                        }
+                    }
+                }
+            }
+
+            var resultBuilder = new StringBuilder();
+            foreach (var contextsParam in contextsParams)
+            {
+                resultBuilder.AppendLine(contextsParam.Key + ": " + contextsParam.Value);
+            }
+
+            parametersTextBlock.Text = resultBuilder.ToString();
+        }
+
+        private void OutputJson(AIResponse aiResponse)
+        {
+            resultTextBlock.Text = JsonConvert.SerializeObject(aiResponse, Formatting.Indented);
+        }
+
+        private AIRequest CreateAiRequest(string requestText, SpeechRecognitionResult recognitionResults)
+        {
+            var texts = new List<string> {requestText};
+            var confidences = new List<float> {ConfidenceToFloat(recognitionResults.Confidence)};
+
+            var aiRequest = new AIRequest();
+
+            var alternates = recognitionResults.GetAlternates(5);
+            if (alternates != null)
+            {
+                foreach (var a in alternates)
+                {
+                    texts.Add(a.Text);
+                    confidences.Add(ConfidenceToFloat(a.Confidence));
+                }
+            }
+            aiRequest.Query = texts.ToArray();
+            aiRequest.Confidence = confidences.ToArray();
+            return aiRequest;
+        }
+
+        private float ConfidenceToFloat(SpeechRecognitionConfidence confidence)
+        {
+            switch (confidence)
+            {
+#pragma warning disable 162
+                case SpeechRecognitionConfidence.High:
+                    return 0.99f;
+                    break;
+                case SpeechRecognitionConfidence.Medium:
+                    return 0.6f;
+                    break;
+                case SpeechRecognitionConfidence.Low:
+                    return 0.3f;
+                    break;
+                case SpeechRecognitionConfidence.Rejected:
+                    return 0;
+                    break;
+#pragma warning restore 162
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(confidence), confidence, null);
             }
         }
 
@@ -154,6 +306,14 @@ namespace ApiAiDemo
                 return sessionId;
             }
             return string.Empty;
+        }
+
+        private void JsonButton_Click(object sender, RoutedEventArgs e)
+        {
+            jsonContaner.Visibility = jsonContaner.Visibility == Visibility.Visible
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+            
         }
     }
 }

@@ -32,7 +32,7 @@ namespace ApiAiDemo.VoiceCommands
             {
 
                 var config = new AIConfiguration("cb9693af-85ce-4fbf-844a-5563722fc27f",
-                           "fa16c9b66e5d4823bbf47640619ad86c",
+                           "40048a5740a1455c9737342154e86946",
                            SupportedLanguage.English);
 
                 apiAi = new ApiAi(config);
@@ -83,13 +83,25 @@ namespace ApiAiDemo.VoiceCommands
                                     var aiResponse = await apiAi.TextRequestAsync(recognizedText);
                                     if(aiResponse != null)
                                     {
-                                        await SendResponse(aiResponse.Result.Fulfillment?.Speech);
+                                        await SendResponse(aiResponse.Result.Fulfillment?.Speech ?? string.Empty);
                                     }   
                                 }
                             }
                             break;
                         default:
-                            await SendResponse("unknown command");
+                            if (!string.IsNullOrEmpty(recognizedText))
+                            {
+                                var aiResponse = await apiAi.TextRequestAsync(recognizedText);
+                                if (aiResponse != null)
+                                {
+                                    await SendResponse(aiResponse.Result.Fulfillment?.Speech ?? string.Empty);
+                                }
+                            }
+                            else
+                            {
+                                await SendResponse("unknown command");
+                            }
+                            
                             break;
                     }
                     

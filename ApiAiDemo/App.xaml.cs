@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -104,7 +105,7 @@ namespace ApiAiDemo
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
-
+        
         protected override void OnActivated(IActivatedEventArgs e)
         {
             // Was the app activated by a voice command?
