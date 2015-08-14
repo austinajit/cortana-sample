@@ -115,9 +115,26 @@ namespace ApiAiDemo
             //    return;
             //}
 
-            //var commandArgs = e as VoiceCommandActivatedEventArgs;
+            string callParameter;
 
-            //var speechRecognitionResult = commandArgs.Result;
+            var commandArgs = e as VoiceCommandActivatedEventArgs;
+
+            if (commandArgs == null)
+            {
+                var protocolArgs = e as ProtocolActivatedEventArgs;
+                callParameter = protocolArgs?.Uri?.Query;
+
+                if (!string.IsNullOrEmpty(callParameter))
+                {
+                    callParameter = callParameter.Substring("?LaunchContext=".Length);
+                    callParameter = Uri.UnescapeDataString(callParameter);
+                }
+
+            }
+            else
+            {
+                callParameter = commandArgs.Result?.Text;
+            }
 
             //// Get the name of the voice command and the text spoken
             //var voiceCommandName = speechRecognitionResult.RulePath[0];
@@ -149,7 +166,7 @@ namespace ApiAiDemo
             //    CommandMode = commandMode
             //};
 
-            rootFrame.Navigate(typeof(MainPage), null);
+            rootFrame.Navigate(typeof(MainPage), callParameter);
 
             // Ensure the current window is active
             Window.Current.Activate();

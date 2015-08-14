@@ -105,12 +105,26 @@ namespace ApiAiDemo
                 var param = Convert.ToString(e.Parameter);
                 if (!string.IsNullOrEmpty(param))
                 {
-                    resultTextBlock.Text = param;
+                    TryLoadAiResponse(param);
                 }
                 
             }
 
             InitializeRecognizer();
+        }
+
+        private void TryLoadAiResponse(string s)
+        {
+            try
+            {
+                var response = JsonConvert.DeserializeObject<AIResponse>(s);
+                OutputJson(response);
+                OutputParams(response);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -323,7 +337,7 @@ namespace ApiAiDemo
                 var storageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///VoiceCommands.xml"));
                 await VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(storageFile);
 
-                resultTextBlock.Text = "Voice commands installed";
+                parametersTextBlock.Text = "Voice commands installed";
                 
             }
             catch (Exception ex)
@@ -340,7 +354,7 @@ namespace ApiAiDemo
                 var storageFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///UninstallCommands.xml"));
                 await VoiceCommandDefinitionManager.InstallCommandDefinitionsFromStorageFileAsync(storageFile);
 
-                resultTextBlock.Text = "Voice commands uninstalled";
+                parametersTextBlock.Text = "Voice commands uninstalled";
 
             }
             catch (Exception ex)

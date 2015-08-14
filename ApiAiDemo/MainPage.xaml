@@ -82,7 +82,7 @@
             <ScrollViewer Grid.Row="3" Grid.Column="0"
                           Grid.ColumnSpan="6"
                           Name="jsonContaner"
-                          Visibility="Visible"
+                          Visibility="Collapsed"
                           VerticalScrollMode="Enabled"
                           HorizontalScrollMode="Disabled"
                           VerticalScrollBarVisibility="Visible"

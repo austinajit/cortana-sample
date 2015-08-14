@@ -24,6 +24,7 @@
         <uap:Extension Category="windows.appService" EntryPoint="ApiAiDemo.VoiceCommands.ApiAiVoiceCommandService">
           <uap:AppService Name="ApiAiVoiceCommandService" />
         </uap:Extension>
+      <uap:Extension Category="windows.personalAssistantLaunch"/>
       </Extensions>
     </Application>
   </Applications>

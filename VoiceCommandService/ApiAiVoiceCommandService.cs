@@ -11,6 +11,8 @@ using Windows.ApplicationModel.VoiceCommands;
 using ApiAiSDK;
 using System.Diagnostics;
 using Windows.Storage;
+using ApiAiSDK.Model;
+using Newtonsoft.Json;
 
 namespace ApiAiDemo.VoiceCommands
 {
@@ -73,7 +75,7 @@ namespace ApiAiDemo.VoiceCommands
                                 var aiResponse = await apiAi.TextRequestAsync(recognizedText);
 
                                 //launch app
-                                await LaunchAppInForeground(aiResponse?.Result?.Fulfillment?.Speech ?? string.Empty);
+                                await LaunchAppInForeground(aiResponse?.Result?.Fulfillment?.Speech ?? string.Empty, aiResponse);
                             }
                             break;
                         case "unknown":
@@ -176,16 +178,24 @@ namespace ApiAiDemo.VoiceCommands
             await voiceServiceConnection.ReportSuccessAsync(response);
         }
 
-        private async Task LaunchAppInForeground(string textMessage)
+        private async Task LaunchAppInForeground(string textMessage, AIResponse aiResponse)
         {
             var userMessage = new VoiceCommandUserMessage();
             userMessage.SpokenMessage = textMessage;
             userMessage.DisplayMessage = textMessage;
 
             var response = VoiceCommandResponse.CreateResponse(userMessage);
-            response.AppLaunchArgument = "";
+            response.AppLaunchArgument = JsonConvert.SerializeObject(aiResponse, Formatting.Indented); ;
 
-            await voiceServiceConnection.RequestAppLaunchAsync(response);
+            try
+            {
+                await voiceServiceConnection.RequestAppLaunchAsync(response);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+            }
+            
         }
 
 
