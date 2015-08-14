@@ -14,7 +14,7 @@
             <Setter Property="Foreground" Value="#F7FFFF" />
             <Setter Property="Margin" Value="5" />
         </Style>
-        
+
     </Page.Resources>
 
     <Grid Background="#2B303E">
@@ -42,75 +42,74 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                
-                <Image Grid.Column="0"  
+
+                <Image Grid.Column="0"
                        Source="Assets/apiai.png" />
-                
-                <TextBlock Grid.Column="1" FontWeight="Bold" 
-                           FontSize="26.667" 
+
+                <TextBlock Grid.Column="1" FontWeight="Bold"
+                           FontSize="26.667"
                            Margin="10,0,0,9"
                            Foreground="#F7FFFF">
-                    
+
                     Pizza
                 </TextBlock>
-                
+
             </Grid>
-            
-            <Button Grid.Row="1" Grid.Column="0" 
+
+            <Button Grid.Row="1" Grid.Column="0"
                     Name="listenButton"
                     Style="{StaticResource apiaiButton}"
                     Content="Listen"
                     Click="Listen_Click"
-                    IsEnabled="False"
-                    />
-            
-            <Button Grid.Row="1" Grid.Column="3" 
+                    IsEnabled="False" />
+
+            <Button Grid.Row="1" Grid.Column="3"
                     Style="{StaticResource apiaiButton}"
                     Content="Install"
-                    Click="InstallVoiceCommands_Click" 
-                    
-                    />
-            
+                    Click="InstallVoiceCommands_Click" />
+
             <Button Grid.Row="1" Grid.Column="4"
                     Style="{StaticResource apiaiButton}"
                     Content="Uninstall"
-                    Click="UninstallCommands_Click"
-                     />
-            
+                    Click="UninstallCommands_Click" />
+
             <Button Grid.Row="1" Grid.Column="5"
                     Style="{StaticResource apiaiButton}"
                     Content="JSON"
-                    Click="JsonButton_Click"
-                    ></Button>
+                    Click="JsonButton_Click" />
 
-            <ScrollViewer Grid.Row="3" Grid.Column="0" 
+
+            <ScrollViewer Grid.Row="3" Grid.Column="0"
                           Grid.ColumnSpan="6"
                           Name="jsonContaner"
-                          Visibility="Collapsed"
-                          Margin="5" >
-                <TextBlock 
-                       Name="resultTextBlock"
-                       TextWrapping="WrapWholeWords"
-                       Foreground="#F7FFFF"
-                       />
+                          Visibility="Visible"
+                          VerticalScrollMode="Enabled"
+                          HorizontalScrollMode="Disabled"
+                          VerticalScrollBarVisibility="Visible"
+                          ZoomMode="Disabled">
+
+                <TextBlock
+                    Name="resultTextBlock"
+                    TextWrapping="Wrap"
+                    Margin="5"
+                    Foreground="#F7FFFF"
+                    LineStackingStrategy="MaxHeight" />
+
             </ScrollViewer>
 
-            <ScrollViewer Grid.Row="3" Grid.Column="0" 
-                          Grid.ColumnSpan="6" 
-                          Name="parametersContainer"
-                          Margin="5">
-                
-                <TextBlock Name="parametersTextBlock"
-                           TextWrapping="WrapWholeWords"
-                           Foreground="#F7FFFF">
-                    
-                </TextBlock>
-                
-            </ScrollViewer>
-            
-            
+
+            <TextBlock Grid.Row="2" Grid.Column="0"
+                       Grid.ColumnSpan="6"
+                       Name="parametersTextBlock"
+                       Margin="5"
+                       TextWrapping="WrapWholeWords"
+                       Foreground="#F7FFFF"
+                       LineStackingStrategy="MaxHeight" 
+                       />
+
+
             <MediaElement Grid.Row="0" Name="mediaElement" />
-            
+
         </Grid>
     </Grid>
 </Page>

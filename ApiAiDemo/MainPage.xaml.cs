@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Windows.ApplicationModel.VoiceCommands;
 using Windows.Media.SpeechSynthesis;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Media;
 using ApiAiSDK.Model;
@@ -30,6 +31,7 @@ namespace ApiAiDemo
         private SpeechRecognizer speechRecognizer;
         private SpeechSynthesizer speechSynthesizer;
         private ApiAi apiAi;
+        //private readonly CoreDispatcher coreDispatcher;
 
 
         public MainPage()
@@ -45,7 +47,11 @@ namespace ApiAiDemo
             apiAi = new ApiAi(config);
 
             mediaElement.MediaEnded += MediaElement_MediaEnded;
+
+            //coreDispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+
             
+
         }
 
         private void MediaElement_MediaEnded(object sender, RoutedEventArgs e)
@@ -57,6 +63,28 @@ namespace ApiAiDemo
         private void SpeechRecognizer_StateChanged(SpeechRecognizer sender, SpeechRecognizerStateChangedEventArgs args)
         {
             Debug.WriteLine("SpeechRecognizer_StateChanged " + args.State);
+
+            switch (args.State)
+            {
+                case SpeechRecognizerState.Idle:
+                    Dispatcher.RunAsync(CoreDispatcherPriority.High, () => listenButton.Content = "Processing");
+                    break;
+                case SpeechRecognizerState.Capturing:
+                    Dispatcher.RunAsync(CoreDispatcherPriority.High, () => listenButton.Content = "Listening...");
+                    break;
+                case SpeechRecognizerState.Processing:
+                    break;
+                case SpeechRecognizerState.SoundStarted:
+                    break;
+                case SpeechRecognizerState.SoundEnded:
+                    break;
+                case SpeechRecognizerState.SpeechDetected:
+                    break;
+                case SpeechRecognizerState.Paused:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -74,8 +102,12 @@ namespace ApiAiDemo
 
             if (e.Parameter != null)
             {
-                var param = e.Parameter;
-                resultTextBlock.Text = param.ToString();
+                var param = Convert.ToString(e.Parameter);
+                if (!string.IsNullOrEmpty(param))
+                {
+                    resultTextBlock.Text = param;
+                }
+                
             }
 
             InitializeRecognizer();
@@ -111,6 +143,10 @@ namespace ApiAiDemo
 
             speechRecognizer = new SpeechRecognizer(new Language("en-US"));
             speechRecognizer.StateChanged += SpeechRecognizer_StateChanged;
+
+//            var dictationConstraint = new SpeechRecognitionTopicConstraint(SpeechRecognitionScenario.Dictation, "dictation");
+//            speechRecognizer.Constraints.Add(dictationConstraint);
+
             await speechRecognizer.CompileConstraintsAsync();
             listenButton.IsEnabled = true;
         }
@@ -129,11 +165,24 @@ namespace ApiAiDemo
                 mediaElement.Stop();
             }
 
+            if (speechRecognizer.State != SpeechRecognizerState.Idle)
+            {
+                try
+                {
+                    await speechRecognizer.StopRecognitionAsync();
+                    return;
+                }
+                catch (Exception)
+                {
+                    
+                }
+            }
 
             try
             {
-                var recognitionResults = await speechRecognizer.RecognizeWithUIAsync();
                 
+                var recognitionResults = await speechRecognizer.RecognizeAsync();    
+             
                 if (recognitionResults != null && recognitionResults.Status == SpeechRecognitionResultStatus.Success)
                 {
                     var requestText = recognitionResults.Text;
@@ -168,18 +217,22 @@ namespace ApiAiDemo
                     }
                     else
                     {
-                        resultTextBlock.Text = "Empty recognition result";
+                        //resultTextBlock.Text = "Empty recognition result";
                     }
                 }
                 else
                 {
-                    resultTextBlock.Text = "Empty or error result";
+                    //resultTextBlock.Text = "Empty or error result";
                 }
+
+                listenButton.Content = "Listen";
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
                 resultTextBlock.Text = "Empty or error result";
+                
+                listenButton.Content = "Listen";
             }
             
         }
