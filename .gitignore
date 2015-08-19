@@ -9,3 +9,5 @@
 /VoiceCommandService/obj
 /.vs/config
 /ApiAiDemo/AppPackages
+/ApiAiDemoTests/bin
+/ApiAiDemoTests/obj
