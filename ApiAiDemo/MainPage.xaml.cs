@@ -26,22 +26,24 @@ namespace ApiAiDemo
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage 
     {
         private SpeechSynthesizer speechSynthesizer;
 
         private AIService AIService => (Application.Current as App)?.AIService;
 
+        private volatile bool recognitionActive = false;
+
         public MainPage()
         {
             InitializeComponent();
-            
-            speechSynthesizer = new SpeechSynthesizer();
-        
-            mediaElement.MediaEnded += MediaElement_MediaEnded;
-            
-        }
 
+            InitializeSynthesizer();
+
+            mediaElement.MediaEnded += MediaElement_MediaEnded;
+
+        }
+        
         private void MediaElement_MediaEnded(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("MediaElement_MediaEnded");
@@ -72,21 +74,41 @@ namespace ApiAiDemo
             }
 
             InitializeRecognizer();
-
-            AIService.OnResult += AIService_OnResult;
-            AIService.OnError += AIService_OnError;
+            
+            AIService.OnListeningStarted += AIService_OnListeningStarted;
+            AIService.OnListeningStopped += AIService_OnListeningStopped;
         }
 
-        private void AIService_OnError(AIServiceException ex)
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            Dispatcher.RunAsync(CoreDispatcherPriority.High, () => resultTextBlock.Text = ex.ToString());
+            base.OnNavigatedFrom(e);
+            
+            AIService.OnListeningStarted -= AIService_OnListeningStarted;
+            AIService.OnListeningStopped -= AIService_OnListeningStopped;
+
+            speechSynthesizer?.Dispose();
+            speechSynthesizer = null;
         }
 
-        private async void AIService_OnResult(AIResponse aiResponse)
+        private void AIService_OnListeningStopped()
         {
-            Dispatcher.RunAsync(CoreDispatcherPriority.High, ()=> OutputJson(aiResponse));
-            Dispatcher.RunAsync(CoreDispatcherPriority.High, () => OutputParams(aiResponse));
+            RunInUIThread(() => listenButton.Content = "Processing...");
+        }
 
+        private void AIService_OnListeningStarted()
+        {
+            RunInUIThread(() => listenButton.Content = "Listening...");
+        }
+
+        private async void ProcessResult(AIResponse aiResponse)
+        {
+            RunInUIThread(() =>
+            {
+                listenButton.Content = "Listen";
+                OutputJson(aiResponse);
+                OutputParams(aiResponse);
+            });
+            
             var speechText = aiResponse.Result?.Fulfillment?.Speech;
             if (!string.IsNullOrEmpty(speechText))
             {
@@ -96,11 +118,11 @@ namespace ApiAiDemo
             }
         }
 
-        private void TryLoadAiResponse(string s)
+        private void TryLoadAiResponse(string responseString)
         {
             try
             {
-                var response = JsonConvert.DeserializeObject<AIResponse>(s);
+                var response = JsonConvert.DeserializeObject<AIResponse>(responseString);
                 OutputJson(response);
                 OutputParams(response);
             }
@@ -116,12 +138,9 @@ namespace ApiAiDemo
             listenButton.IsEnabled = true;
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        private void InitializeSynthesizer()
         {
-            base.OnNavigatedFrom(e);
-
-            AIService.OnResult -= AIService_OnResult;
-            AIService.OnError -= AIService_OnError;
+            speechSynthesizer = new SpeechSynthesizer();
         }
 
         private async void Listen_Click(object sender, RoutedEventArgs e)
@@ -131,17 +150,34 @@ namespace ApiAiDemo
             {
                 mediaElement.Stop();
             }
-            
+
             try
             {
-                await AIService.StartRecognitionAsync();
-                listenButton.Content = "Listen";
+                if (!recognitionActive)
+                {
+                    recognitionActive = true;
+                    var aiResponse = await AIService.StartRecognitionAsync();
+                    recognitionActive = false;
+                    ProcessResult(aiResponse);
+                }
+                else
+                {
+                    AIService.Cancel();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                recognitionActive = false;
+                resultTextBlock.Text = "Cancelled";
             }
             catch (Exception ex)
             {
+                recognitionActive = false;
                 Debug.WriteLine(ex.ToString());
-                resultTextBlock.Text = "Empty or error result";
-                
+                resultTextBlock.Text = $"Empty or error result: {Environment.NewLine}{ex}";
+            }
+            finally
+            {
                 listenButton.Content = "Listen";
             }
             
@@ -233,6 +269,11 @@ namespace ApiAiDemo
                 ? Visibility.Collapsed
                 : Visibility.Visible;
             
+        }
+
+        private async void RunInUIThread(Action a)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.High, () => a());
         }
     }
 }

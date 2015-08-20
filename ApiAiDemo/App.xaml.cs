@@ -35,15 +35,21 @@ namespace ApiAiDemo
             Microsoft.ApplicationInsights.WindowsAppInitializer.InitializeAsync(
                 Microsoft.ApplicationInsights.WindowsCollectors.Metadata |
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
 
+            InitializeComponent();
+            Suspending += OnSuspending;
+            Resuming += OnResuming;
 
             var config = new AIConfiguration("cb9693af-85ce-4fbf-844a-5563722fc27f",
                                  "40048a5740a1455c9737342154e86946",
                                  SupportedLanguage.English);
 
             AIService = AIService.CreateService(config);
+        }
+
+        private void OnResuming(object sender, object e)
+        {
+            Debug.WriteLine("OnResuming");
         }
 
         /// <summary>
@@ -92,6 +98,8 @@ namespace ApiAiDemo
             Window.Current.Activate();
         }
 
+        
+
         /// <summary>
         /// Invoked when Navigation to a certain page fails
         /// </summary>
@@ -111,8 +119,14 @@ namespace ApiAiDemo
         /// <param name="e">Details about the suspend request.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
+            Debug.WriteLine("OnSuspending");
+
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
+            if (AIService != null)
+            {
+                AIService.Dispose();
+                AIService = null;
+            }
             deferral.Complete();
         }
         
