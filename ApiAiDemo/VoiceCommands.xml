@@ -6,7 +6,7 @@
     <Command Name="unknown">
       <Example>Some another command</Example>
       <ListenFor RequireAppName="BeforePhrase">{*}</ListenFor>
-      <Feedback>Can you rephrase it please?</Feedback>
+      <Feedback>Processing...</Feedback>
       <VoiceCommandService Target="ApiAiVoiceCommandService"/>
     </Command>
     <Command Name="time_delivery_time">

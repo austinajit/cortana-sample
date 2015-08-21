@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Globalization;
-using Windows.Media.SpeechRecognition;
 using Windows.Storage;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Newtonsoft.Json;
-using Windows.ApplicationModel.VoiceCommands;
 using Windows.Media.SpeechSynthesis;
 using Windows.UI;
 using Windows.UI.Core;
@@ -53,32 +49,22 @@ namespace ApiAiDemo
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            SetupTheme();
 
-            var appView = ApplicationView.GetForCurrentView();
-            var titleBar = appView.TitleBar;
-            titleBar.BackgroundColor = Color.FromArgb(255, 43, 48, 62);
-            titleBar.InactiveBackgroundColor = Color.FromArgb(255, 43, 48, 62);
-            titleBar.ButtonBackgroundColor = Color.FromArgb(255, 43, 48, 62);
-            titleBar.ButtonInactiveBackgroundColor = Color.FromArgb(255, 43, 48, 62);
-            titleBar.ForegroundColor = Color.FromArgb(255, 247, 255, 255);
-            
-
-            if (e.Parameter != null)
+            var response = e.Parameter as AIResponse;
+            if (response != null)
             {
-                var param = Convert.ToString(e.Parameter);
-                if (!string.IsNullOrEmpty(param))
-                {
-                    TryLoadAiResponse(param);
-                }
-                
+                var aiResponse = response;
+                OutputJson(aiResponse);
+                OutputParams(aiResponse);
             }
-
-            InitializeRecognizer();
             
+            InitializeRecognizer();
+
             AIService.OnListeningStarted += AIService_OnListeningStarted;
             AIService.OnListeningStopped += AIService_OnListeningStopped;
         }
-
+        
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
@@ -117,21 +103,7 @@ namespace ApiAiDemo
                 mediaElement.Play();
             }
         }
-
-        private void TryLoadAiResponse(string responseString)
-        {
-            try
-            {
-                var response = JsonConvert.DeserializeObject<AIResponse>(responseString);
-                OutputJson(response);
-                OutputParams(response);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-        }
-        
+   
         private async Task InitializeRecognizer()
         {
             await AIService.InitializeAsync();
@@ -158,7 +130,11 @@ namespace ApiAiDemo
                     recognitionActive = true;
                     var aiResponse = await AIService.StartRecognitionAsync();
                     recognitionActive = false;
-                    ProcessResult(aiResponse);
+
+                    if (aiResponse != null)
+                    {
+                        ProcessResult(aiResponse);
+                    }
                 }
                 else
                 {
@@ -252,23 +228,23 @@ namespace ApiAiDemo
             }
         }
 
-        private string RestoreSessionId()
-        {
-            var roamingSettings = ApplicationData.Current.LocalSettings;
-            if (roamingSettings.Values.ContainsKey("SessionId"))
-            {
-                var sessionId = Convert.ToString(roamingSettings.Values["SessionId"]);
-                return sessionId;
-            }
-            return string.Empty;
-        }
-
         private void JsonButton_Click(object sender, RoutedEventArgs e)
         {
             jsonContaner.Visibility = jsonContaner.Visibility == Visibility.Visible
                 ? Visibility.Collapsed
                 : Visibility.Visible;
             
+        }
+
+        private void SetupTheme()
+        {
+            var appView = ApplicationView.GetForCurrentView();
+            var titleBar = appView.TitleBar;
+            titleBar.BackgroundColor = Color.FromArgb(255, 43, 48, 62);
+            titleBar.InactiveBackgroundColor = Color.FromArgb(255, 43, 48, 62);
+            titleBar.ButtonBackgroundColor = Color.FromArgb(255, 43, 48, 62);
+            titleBar.ButtonInactiveBackgroundColor = Color.FromArgb(255, 43, 48, 62);
+            titleBar.ForegroundColor = Color.FromArgb(255, 247, 255, 255);
         }
 
         private async void RunInUIThread(Action a)

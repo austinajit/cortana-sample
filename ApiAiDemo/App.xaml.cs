@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using ApiAiSDK;
+using ApiAiSDK.Model;
 
 namespace ApiAiDemo
 {
@@ -130,32 +131,17 @@ namespace ApiAiDemo
             deferral.Complete();
         }
         
-        protected override void OnActivated(IActivatedEventArgs e)
+        protected async override void OnActivated(IActivatedEventArgs e)
         {
-            // Was the app activated by a voice command?
-            //if (e.Kind != ActivationKind.VoiceCommand)
-            //{
-            //    base.OnActivated(e);
-            //    return;
-            //}
-
-            AIService.ProcessOnActivated(e);
-
-            var protocolArgs = e as ProtocolActivatedEventArgs;
-            var callParameter = protocolArgs?.Uri?.Query;
-
-            if (!string.IsNullOrEmpty(callParameter))
+            AIResponse aiResponse = null;
+            try
             {
-                callParameter = callParameter.Substring("?LaunchContext=".Length);
-                callParameter = Uri.UnescapeDataString(callParameter);
+                aiResponse = await AIService.ProcessOnActivatedAsync(e);
             }
-            
-            //// Get the name of the voice command and the text spoken
-            //var voiceCommandName = speechRecognitionResult.RulePath[0];
-            //var textSpoken = speechRecognitionResult.Text;
-            //// The commandMode is either "voice" or "text", and it indicates how the voice command was entered by the user.
-            //// Apps should respect "text" mode by providing feedback in a silent form.
-            //var commandMode = speechRecognitionResult.SemanticInterpretation;
+            catch (Exception)
+            {
+                // ignored
+            }
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -172,7 +158,7 @@ namespace ApiAiDemo
                 Window.Current.Content = rootFrame;
             }
             
-            rootFrame.Navigate(typeof(MainPage), callParameter);
+            rootFrame.Navigate(typeof(MainPage), aiResponse);
 
             // Ensure the current window is active
             Window.Current.Activate();
