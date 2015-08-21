@@ -143,6 +143,11 @@ namespace ApiAiDemo
                 // ignored
             }
 
+            NavigateToMain(aiResponse);
+        }
+
+        private void NavigateToMain(AIResponse aiResponse)
+        {
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -157,7 +162,7 @@ namespace ApiAiDemo
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
             }
-            
+
             rootFrame.Navigate(typeof(MainPage), aiResponse);
 
             // Ensure the current window is active
