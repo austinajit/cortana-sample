@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAiDemo", "ApiAiDemo\ApiA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoiceCommandService", "VoiceCommandService\VoiceCommandService.csproj", "{27BA4DE1-99AA-40B9-8B1D-A3D989AAF3FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAiDemoTests", "ApiAiDemoTests\ApiAiDemoTests.csproj", "{5E7872B6-B1E9-412C-A637-06BDEE07C227}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,37 +77,6 @@ Global
 		{27BA4DE1-99AA-40B9-8B1D-A3D989AAF3FC}.Release|x64.Build.0 = Release|x64
 		{27BA4DE1-99AA-40B9-8B1D-A3D989AAF3FC}.Release|x86.ActiveCfg = Release|x86
 		{27BA4DE1-99AA-40B9-8B1D-A3D989AAF3FC}.Release|x86.Build.0 = Release|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Debug|ARM.ActiveCfg = Debug|ARM
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Debug|ARM.Build.0 = Debug|ARM
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Debug|ARM.Deploy.0 = Debug|ARM
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Debug|x64.ActiveCfg = Debug|x64
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Debug|x64.Build.0 = Debug|x64
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Debug|x64.Deploy.0 = Debug|x64
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Debug|x86.ActiveCfg = Debug|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Debug|x86.Build.0 = Debug|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Debug|x86.Deploy.0 = Debug|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.DebugService|Any CPU.ActiveCfg = Release|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.DebugService|Any CPU.Build.0 = Release|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.DebugService|Any CPU.Deploy.0 = Release|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.DebugService|ARM.ActiveCfg = Debug|ARM
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.DebugService|ARM.Build.0 = Debug|ARM
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.DebugService|ARM.Deploy.0 = Debug|ARM
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.DebugService|x64.ActiveCfg = Debug|x64
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.DebugService|x64.Build.0 = Debug|x64
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.DebugService|x86.ActiveCfg = Debug|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.DebugService|x86.Build.0 = Debug|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.DebugService|x86.Deploy.0 = Debug|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Release|Any CPU.ActiveCfg = Release|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Release|ARM.ActiveCfg = Release|ARM
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Release|ARM.Build.0 = Release|ARM
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Release|ARM.Deploy.0 = Release|ARM
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Release|x64.ActiveCfg = Release|x64
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Release|x64.Build.0 = Release|x64
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Release|x64.Deploy.0 = Release|x64
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Release|x86.ActiveCfg = Release|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Release|x86.Build.0 = Release|x86
-		{5E7872B6-B1E9-412C-A637-06BDEE07C227}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
