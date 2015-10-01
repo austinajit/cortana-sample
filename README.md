@@ -1,7 +1,9 @@
 # API.AI Cortana Integration Sample
-Sample app using Cortana with an Api.ai agent. 
+The app demostrates how to use Api.ai with a Cortana-compatible app.
+Full focs could be found on the [Api.ai Docs Page](https://docs.api.ai/v3/docs/cortana-integration).
 
-[ApiAiSDK](https://www.nuget.org/packages/ApiAiSDK/) installed to project using Nuget.
+## Pre-requisites
+[ApiAiSDK](https://www.nuget.org/packages/ApiAiSDK/) needs to be included in the project using Nuget.
 
 ## App class
 
